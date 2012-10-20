@@ -11,11 +11,15 @@ Relies on SDL along with the C and C++ Standard Libraries. Just run make on Linu
 
 For clustering random points: Just modify the #define statements at the top of the code. Then in main run randomPoints();
 
-For clustering points from a file: Format points as such:
+For clustering points from a file use readInPoints(); Format points as such:
 
 `x,y\n
+
 x,y\n
+
 etc.`
+
+An example points.txt file is included in this repository.
 
 ### About the author:
 
