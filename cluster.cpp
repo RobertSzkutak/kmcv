@@ -46,6 +46,7 @@
 
 #define CLUSTERS 4
 #define POINTS 500
+//#define WANT_CENTERS_DRAWN 1
 
 struct point
 {
@@ -169,22 +170,24 @@ void visualize_cluster(point *points, int numpoints, int *cluster_centersx, int 
         }
     }
 
-    debug("Drawing cluster centers...");
     //Draw Cluster Centers
-    /*for(int i = 0; i < clusters; i++)
-    {
-        if(cluster_centersy[i] - 10  >= 0 && cluster_centersy[i] + 10  <= WINH && cluster_centersx[i] - 10  >= 0 && cluster_centersx[i] + 10  <= WINW)
-        {//Causes a crash if a circle is drawn off the screen partially. I need a better circle function..
-            if(i == 0)
-                fill_circle(screen, cluster_centersx[i], cluster_centersy[i], 10, (ALPHA | RED));
-            if(i == 1)
-                fill_circle(screen, cluster_centersx[i], cluster_centersy[i], 10, (ALPHA | GREEN));
-            if(i == 2)
-                fill_circle(screen, cluster_centersx[i], cluster_centersy[i], 10, (ALPHA | BLUE));
-            if(i >= 3)
-                fill_circle(screen, cluster_centersx[i], cluster_centersy[i], 10, (ALPHA | PINK));
+    #ifdef WANT_CENTERS_DRAWN
+        debug("Drawing cluster centers...");
+        for(int i = 0; i < clusters; i++)
+        {
+            if(cluster_centersy[i] - 10  >= 0 && cluster_centersy[i] + 10  <= WINH && cluster_centersx[i] - 10  >= 0 && cluster_centersx[i] + 10  <= WINW)
+            {//Causes a crash if a circle is drawn off the screen partially. I need a better circle function..
+                if(i == 0)
+                    fill_circle(screen, cluster_centersx[i], cluster_centersy[i], 10, (ALPHA | RED));
+                if(i == 1)
+                    fill_circle(screen, cluster_centersx[i], cluster_centersy[i], 10, (ALPHA | GREEN));
+                if(i == 2)
+                    fill_circle(screen, cluster_centersx[i], cluster_centersy[i], 10, (ALPHA | BLUE));
+                if(i >= 3)
+                    fill_circle(screen, cluster_centersx[i], cluster_centersy[i], 10, (ALPHA | PINK));
+            }
         }
-    }*/
+    #endif
 
     debug("Entering input loop...");
     SDL_Event event;
