@@ -47,19 +47,12 @@
 #define CLUSTERS 4
 #define POINTS 500
 //#define WANT_CENTERS_DRAWN 1
+#define WANT_AXIS_DRAWN 1
 
 struct point
 {
     int x, y, cluster;
 };
-
-int uabs(int n)
-{
-    if(n < 0)
-        return n * -1;
-    else
-        return n;
-}
 
 void debug(std::string s)
 {
@@ -136,12 +129,14 @@ void visualize_cluster(point *points, int numpoints, int *cluster_centersx, int 
     SDL_Rect rect = {0, 0, WINW, WINH};
     SDL_FillRect(screen, &rect, WHITE);
 
-    debug("Drawing axis...");
     //Draw axis
-    SDL_Rect xaxis = {0, (maxh+lh)/2, WINW, 1};
-    SDL_Rect yaxis = {(maxw+lw)/2, 0, 1, WINH};
-    SDL_FillRect(screen, &xaxis, BLACK);
-    SDL_FillRect(screen, &yaxis, BLACK);
+    #ifdef WANT_AXIS_DRAWN
+        debug("Drawing axis...");
+        SDL_Rect xaxis = {0, (maxh+lh)/2, WINW, 1};
+        SDL_Rect yaxis = {(maxw+lw)/2, 0, 1, WINH};
+        SDL_FillRect(screen, &xaxis, BLACK);
+        SDL_FillRect(screen, &yaxis, BLACK);
+    #endif
 
     //TODO : Generate a random color for each cluster
 
@@ -280,7 +275,7 @@ void cluster(int clusters, int * pointsx, int * pointsy, int numpoints)
             for(int j = 0; j < clusters; j++)
             {
                 debug("Computing new cluster score...");
-                int new_cluster_score = uabs(points[i].x - cluster_centersx[j]) + uabs(points[i].y - cluster_centersy[j]);
+                int new_cluster_score = abs(points[i].x - cluster_centersx[j]) + abs(points[i].y - cluster_centersy[j]);
                 if(new_cluster_score < cluster_score)
                 {
                     cluster_score = new_cluster_score;
@@ -323,7 +318,7 @@ void cluster(int clusters, int * pointsx, int * pointsy, int numpoints)
                 int place = 0;
                 for(int j = 0; j < numpoints; j++)
                 {
-                    int newscore = uabs(cluster_centersx[i] - points[j].x) + uabs(cluster_centersy[i] - points[j].y);
+                    int newscore = abs(cluster_centersx[i] - points[j].x) + abs(cluster_centersy[i] - points[j].y);
                     if(newscore < score)
                     {
                         bool hack = false;
@@ -419,9 +414,9 @@ int main (int argc, char *argv[])
 {
     srand(time(0));
     
-    //randomPoints();
+    randomPoints();
 
-    readInPoints();
+    //readInPoints();
 
     return 0;
 }
