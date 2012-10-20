@@ -22,6 +22,7 @@
 #include <iostream>
 #include <string>
 #include <math.h>
+#include <fstream>
 
 #include <SDL/SDL.h>
 
@@ -83,7 +84,9 @@ void fill_circle(SDL_Surface *surface, int cx, int cy, int radius, Uint32 pixel)
        // The following formula has been simplified from our original.  We
        // are using half of the width of the circle because we are provided
        // with a center and we need left/right coordinates.
+       //debug("Caclulating dx..");
        double dx = floor(sqrt((2.0 * r * dy) - (dy * dy)));
+       //debug("Calculating x..");       
        int x = cx - dx;
        // Grab a pointer to the left-most pixel for each half of the circle
        Uint8 *target_pixel_a = (Uint8 *)surface->pixels + ((int)(cy + r - dy)) * surface->pitch + x * BPP;
@@ -132,6 +135,7 @@ void visualize_cluster(point *points, int numpoints, int *cluster_centersx, int 
     SDL_Rect rect = {0, 0, WINW, WINH};
     SDL_FillRect(screen, &rect, WHITE);
 
+    debug("Drawing axis...");
     //Draw axis
     SDL_Rect xaxis = {0, (maxh+lh)/2, WINW, 1};
     SDL_Rect yaxis = {(maxw+lw)/2, 0, 1, WINH};
@@ -140,6 +144,7 @@ void visualize_cluster(point *points, int numpoints, int *cluster_centersx, int 
 
     //TODO : Generate a random color for each cluster
 
+    debug("Plotting points...");
     //Draw points
     for(int i = 0; i < numpoints; i++)
     {
@@ -164,19 +169,24 @@ void visualize_cluster(point *points, int numpoints, int *cluster_centersx, int 
         }
     }
 
+    debug("Drawing cluster centers...");
     //Draw Cluster Centers
-    for(int i = 0; i < clusters; i++)
+    /*for(int i = 0; i < clusters; i++)
     {
-        if(i == 0)
-            fill_circle(screen, cluster_centersx[i], cluster_centersy[i], 10, (ALPHA | RED));
-        if(i == 1)
-            fill_circle(screen, cluster_centersx[i], cluster_centersy[i], 10, (ALPHA | GREEN));
-        if(i == 2)
-            fill_circle(screen, cluster_centersx[i], cluster_centersy[i], 10, (ALPHA | BLUE));
-        if(i >= 3)
-            fill_circle(screen, cluster_centersx[i], cluster_centersy[i], 10, (ALPHA | PINK));
-    }
+        if(cluster_centersy[i] - 10  >= 0 && cluster_centersy[i] + 10  <= WINH && cluster_centersx[i] - 10  >= 0 && cluster_centersx[i] + 10  <= WINW)
+        {//Causes a crash if a circle is drawn off the screen partially. I need a better circle function..
+            if(i == 0)
+                fill_circle(screen, cluster_centersx[i], cluster_centersy[i], 10, (ALPHA | RED));
+            if(i == 1)
+                fill_circle(screen, cluster_centersx[i], cluster_centersy[i], 10, (ALPHA | GREEN));
+            if(i == 2)
+                fill_circle(screen, cluster_centersx[i], cluster_centersy[i], 10, (ALPHA | BLUE));
+            if(i >= 3)
+                fill_circle(screen, cluster_centersx[i], cluster_centersy[i], 10, (ALPHA | PINK));
+        }
+    }*/
 
+    debug("Entering input loop...");
     SDL_Event event;
     bool exit = false;
 
@@ -244,11 +254,12 @@ void cluster(int clusters, int * pointsx, int * pointsy, int numpoints)
                This wouldn't work with truly random datasets but since this is where we predict the clusters will be ...
     */
     debug("Picking initial cluster centers...");
-    int cluster_centersx[clusters], cluster_centersy[clusters];
+    int cluster_centersx[clusters], cluster_centersy[clusters], cluster_count[clusters];
     for(int i = 0; i < clusters; i++)
     {
         cluster_centersx[i] = rand() % WINW + 1;
         cluster_centersy[i] = rand() % WINH + 1;
+        cluster_count[i] = 0;
     }
 
     bool exit = false;
@@ -278,22 +289,23 @@ void cluster(int clusters, int * pointsx, int * pointsy, int numpoints)
         //Recalculate cluster centers. If they don't change, exit the loop
         for(int i = 0; i < clusters; i++)
         {
-            int all_x = 0, all_y = 0, count = 0;
+            int all_x = 0, all_y = 0;
+            cluster_count[i] = 0;
             for(int j = 0; j < numpoints; j++)
             {
                 if(points[j].cluster == i)
                 {
                     all_x += points[j].x;
                     all_y += points[j].y;
-                    count++;
+                    cluster_count[i]++;
                 }
             }
 
             debug("Computing new centers for clusters...");
-            if(count > 0)
+            if(cluster_count[i] > 0)
             {
-                int new_center_x = (int) all_x / count;
-                int new_center_y = (int) all_y / count;
+                int new_center_x = (int) all_x / cluster_count[i];
+                int new_center_y = (int) all_y / cluster_count[i];
 
                 if(cluster_centersx[i] != new_center_x || cluster_centersy[i] != new_center_y)
                 {
@@ -311,8 +323,16 @@ void cluster(int clusters, int * pointsx, int * pointsy, int numpoints)
                     int newscore = uabs(cluster_centersx[i] - points[j].x) + uabs(cluster_centersy[i] - points[j].y);
                     if(newscore < score)
                     {
-                        score = newscore;
-                        place = j;
+                        bool hack = false;
+                        for(int x = 0; x < clusters; x++)
+                            if(cluster_count[x] == 1 && points[j].cluster == x)
+                                hack = true;
+                        if(hack = false)//if no other clusters contain only this point
+                        {
+                            score = newscore;
+                            place = j;
+                            cluster_count[points[j].cluster]--;
+                        }
                     }
                 }
                 cluster_centersx[i] = points[place].x;
@@ -324,10 +344,8 @@ void cluster(int clusters, int * pointsx, int * pointsy, int numpoints)
     visualize_cluster(points, numpoints, cluster_centersx, cluster_centersy, clusters);
 }
 
-int main (int argc, char *argv[])
+void randomPoints()
 {
-    srand(time(0));
-
     int clusters = CLUSTERS;
     int numpoints = POINTS;
     int pointsx[numpoints], pointsy[numpoints];
@@ -341,6 +359,66 @@ int main (int argc, char *argv[])
     debug("Moving into clustering ...");
 
     cluster(clusters, pointsx, pointsy, numpoints);
+}
+
+void readInPoints()
+{
+    //TODO: Figure out how to not have to use two ifstreams
+    int pif = 0;//points in file
+
+    std::string line;
+    std::ifstream file1 ("points.txt");
+
+    if(file1.is_open())
+    {
+        while(file1.good())
+        {
+            getline(file1, line);
+            pif++;
+        }
+        file1.close();
+    }
+    else
+    {
+        randomPoints();
+        return;
+    }
+
+    int pointsx[pif], pointsy[pif];
+
+    std::ifstream file ("points.txt");
+
+    int count = 0;
+
+    debug("All good at here...");
+
+    if(file.is_open())
+    {
+        while(file.good())
+        {
+            getline(file, line);
+            size_t comma = line.find(",");
+            int pos = int(comma);
+            std::string x = line.substr(0, pos);
+            std::string y = line.substr(pos+1);
+            pointsx[count] = atoi(x.c_str());
+            pointsy[count] = atoi(y.c_str());        
+            count++;
+        }
+        file.close();
+    }
+
+    int clusters = CLUSTERS;
+    cluster(clusters, pointsx, pointsy, pif);
+}
+
+int main (int argc, char *argv[])
+{
+    srand(time(0));
+    
+    //randomPoints();
+
+    readInPoints();
 
     return 0;
 }
