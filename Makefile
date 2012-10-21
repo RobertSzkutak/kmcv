@@ -1,5 +1,5 @@
 CC = g++
-SOURCES = cluster.cpp
+SOURCES = main.cpp
 OUTPUT = -o cv
 
 gradproject:
