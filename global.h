@@ -20,19 +20,21 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-#define CLUSTERS 4
-#define POINTS 500
-//#define WANT_CENTERS_DRAWN 1
-#define WANT_AXIS_DRAWN 1
-#define WANT_CLUSTERS_PRINTED 1
+#define CLUSTERS 4 //Number of clusters to arrange points into
+#define POINTS 500 //Number of points to generate if random generation is used
+//#define WANT_CENTERS_DRAWN 1 //Whether or not to draw the cluster centers in the rendering of clusters
+#define WANT_AXIS_DRAWN 1 //Whether or not to draw a mean axis in the rendering of clusters
+#define WANT_CLUSTERS_PRINTED 1 //Whether or not to make an output file detailing the clusters, cluster centers, and clusters that each point belongs to
 
-#define USE_SDL 1
+#define USE_SDL 1 //Whether or not to use the SDL visualizer
+#define USE_HTML 1
 
-//#define DEBUG 1
+//#define DEBUG 1 //Whether or not to output debug information to the terminal
 
 #define WINW 720 //Window Width
 #define WINH 480 //Window Height
 
+//Color constants
 #define ALPHA 0xFF000000
 
 #define WHITE 0xFFFFFF

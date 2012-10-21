@@ -17,10 +17,14 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 
+#include "global.h"
+
+#ifdef USE_SDL
+
 #include "sdl.h"
 #include "util.h"
 
-void sdl_visualize_cluster(point *points, int numpoints, int *cluster_centersx, int *cluster_centersy, int clusters)
+void sdl_visualize_clusters(point *points, int numpoints, int *cluster_centersx, int *cluster_centersy, int clusters)
 {
     int maxw = 0, lw = WINW;    
     for(int i = 0; i < numpoints; i++)
@@ -68,7 +72,7 @@ void sdl_visualize_cluster(point *points, int numpoints, int *cluster_centersx, 
     //Draw points
     for(int i = 0; i < numpoints; i++)
     {
-        SDL_Rect pixel = {points[i].x+2, points[i].y+2, 5, 5};
+        SDL_Rect pixel = {points[i].x-2, points[i].y-2, 5, 5};//Offset of -3 makes center pixel of 5x5 appear at x,y 
         switch(points[i].cluster)
         {
             case 0:
@@ -186,3 +190,5 @@ void fill_circle(SDL_Surface *surface, int cx, int cy, int radius, Uint32 pixel)
        }
    }
 }
+
+#endif

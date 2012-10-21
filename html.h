@@ -17,18 +17,12 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 
-#ifndef KMCV_SDL
-#define KMCV_SDL
-
 #include "global.h"
 
-#ifdef USE_SDL
+#ifdef USE_HTML5
 
-#include <SDL/SDL.h>
+#include <sstream>
 
-void fill_circle(SDL_Surface *surface, int cx, int cy, int radius, Uint32 pixel);
+void html5_visualize_clusters(point *points, int numpoints, int *cluster_centersx, int *cluster_centersy, int clusters);
 
-void sdl_visualize_clusters(point *points, int numpoints, int *cluster_centersx, int *cluster_centersy, int clusters);
-
-#endif
 #endif

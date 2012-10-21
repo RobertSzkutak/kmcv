@@ -28,7 +28,11 @@
 #include <fstream>
 
 #ifdef USE_SDL
-    #include <SDL/SDL.h>
+    #include "sdl.h"
+#endif
+
+#ifdef USE_HTML
+    #include "html.h"
 #endif
 
 #endif

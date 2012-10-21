@@ -43,6 +43,7 @@ void print_clusters(points, numpoints, cluster_centersx, cluster_centersy, clust
         }
         out << std::endl << std::endl << std::endl;
     }
+    out.close();
 }
 
 void cluster(int clusters, int * pointsx, int * pointsy, int numpoints)
@@ -172,7 +173,11 @@ void cluster(int clusters, int * pointsx, int * pointsy, int numpoints)
         }
     }
     #ifdef USE_SDL
-        sdl_visualize_cluster(points, numpoints, cluster_centersx, cluster_centersy, clusters);
+        sdl_visualize_clusters(points, numpoints, cluster_centersx, cluster_centersy, clusters);
+    #endif
+    
+    #ifdef USE_HTML
+        html_visualize_clusters(points, numpoints, cluster_centersx, cluster_centersy, clusters);
     #endif
     
     #ifdef WANT_CLUSTERS_PRINTED
