@@ -16,6 +16,8 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
+#ifndef KMCV_HTML5
+#define KMCV_HTML5
 
 #include "global.h"
 
@@ -24,5 +26,7 @@
 #include <sstream>
 
 void html5_visualize_clusters(point *points, int numpoints, int *cluster_centersx, int *cluster_centersy, int clusters);
+
+#endif
 
 #endif
