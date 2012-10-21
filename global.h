@@ -27,7 +27,7 @@
 #define WANT_CLUSTERS_PRINTED 1 //Whether or not to make an output file detailing the clusters, cluster centers, and clusters that each point belongs to
 
 #define USE_SDL 1 //Whether or not to use the SDL visualizer
-#define USE_HTML 1
+#define USE_HTML5 1
 
 //#define DEBUG 1 //Whether or not to output debug information to the terminal
 

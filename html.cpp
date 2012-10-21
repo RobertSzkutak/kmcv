@@ -25,7 +25,7 @@
 
 void html5_visualize_clusters(point *points, int numpoints, int *cluster_centersx, int *cluster_centersy, int clusters)
 {
-    std::ofstream out("output.html")
+    std::ofstream out("output.html");
     
     std::string top = "<html>\
 	<head>\
