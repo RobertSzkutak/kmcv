@@ -24,6 +24,7 @@
 #define POINTS 500
 //#define WANT_CENTERS_DRAWN 1
 #define WANT_AXIS_DRAWN 1
+#define WANT_CLUSTERS_PRINTED 1
 
 #define USE_SDL 1
 

@@ -25,6 +25,26 @@
     #include "sdl.h"
 #endif
 
+void print_clusters(points, numpoints, cluster_centersx, cluster_centersy, clusters)
+{
+    std::ofstream out("output.txt");
+    out << "Clusters:\n\n";
+    for(int i = 0; i < clusters; i++)
+    {
+        out << "Cluster " << i << ":" << std::endl;
+        out << "Center: (" << cluster_centersx[i] << "," << cluster_centersy[i] << ")" << std::endl;
+        out << "Cluster Points:" << std::endl;
+        for(int j = 0; j < numpoints; j++)
+        {
+            if(points[j].cluster == i)
+            {
+                out << "(" << points[j].x << "," << points[j].y << ")" << std::endl;
+            }
+        }
+        out << std::endl << std::endl << std::endl;
+    }
+}
+
 void cluster(int clusters, int * pointsx, int * pointsy, int numpoints)
 {
     //Create points
@@ -151,7 +171,13 @@ void cluster(int clusters, int * pointsx, int * pointsy, int numpoints)
             }
         }
     }
-    sdl_visualize_cluster(points, numpoints, cluster_centersx, cluster_centersy, clusters);
+    #ifdef USE_SDL
+        sdl_visualize_cluster(points, numpoints, cluster_centersx, cluster_centersy, clusters);
+    #endif
+    
+    #ifdef WANT_CLUSTERS_PRINTED
+        print_clusters(points, numpoints, cluster_centersx, cluster_centersy, clusters);
+    #endif
 }
 
 void randomPoints()
