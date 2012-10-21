@@ -17,33 +17,11 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 
-#ifndef GLOBAL_H
-#define GLOBAL_H
+#include "util.h"
 
-#define CLUSTERS 4
-#define POINTS 500
-//#define WANT_CENTERS_DRAWN 1
-#define WANT_AXIS_DRAWN 1
-
-#define USE_SDL 1
-
-//#define DEBUG 1
-
-#define WINW 720 //Window Width
-#define WINH 480 //Window Height
-
-#define ALPHA 0xFF000000
-
-#define WHITE 0xFFFFFF
-#define RED   0xFF0000
-#define GREEN 0x00FF00
-#define BLUE  0x0000FF
-#define BLACK 0x000000
-#define PINK  0xFF00FF
-
-struct point
+void debug(std::string s)
 {
-    int x, y, cluster;
-};
-
-#endif
+    #ifdef DEBUG
+        std::cout << s << std::endl;     
+    #endif
+}

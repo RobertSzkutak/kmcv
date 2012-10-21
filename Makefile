@@ -1,5 +1,5 @@
 CC = g++
-SOURCES = main.cpp
+SOURCES = main.cpp util.cpp sdl.cpp
 OUTPUT = -o cv
 
 gradproject:

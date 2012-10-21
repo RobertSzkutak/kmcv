@@ -31,13 +31,4 @@
     #include <SDL/SDL.h>
 #endif
 
-#ifdef DEBUG
-    #include <sstream>
-#endif
-
-struct point
-{
-    int x, y, cluster;
-};
-
 #endif

@@ -17,33 +17,18 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 
-#ifndef GLOBAL_H
-#define GLOBAL_H
+#ifndef KMCV_SDL
+#define KMCV_SDL
 
-#define CLUSTERS 4
-#define POINTS 500
-//#define WANT_CENTERS_DRAWN 1
-#define WANT_AXIS_DRAWN 1
+#include "global.h"
 
-#define USE_SDL 1
+#ifdef USE_SDL
 
-//#define DEBUG 1
+#include <SDL/SDL.h>
 
-#define WINW 720 //Window Width
-#define WINH 480 //Window Height
+void fill_circle(SDL_Surface *surface, int cx, int cy, int radius, Uint32 pixel);
 
-#define ALPHA 0xFF000000
+void sdl_visualize_cluster(point *points, int numpoints, int *cluster_centersx, int *cluster_centersy, int clusters);
 
-#define WHITE 0xFFFFFF
-#define RED   0xFF0000
-#define GREEN 0x00FF00
-#define BLUE  0x0000FF
-#define BLACK 0x000000
-#define PINK  0xFF00FF
-
-struct point
-{
-    int x, y, cluster;
-};
-
+#endif
 #endif
