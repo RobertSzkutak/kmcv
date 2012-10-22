@@ -176,16 +176,16 @@ void cluster(int clusters, int * pointsx, int * pointsy, int numpoints)
             }
         }
     }
-    #ifdef USE_SDL
-        sdl_visualize_clusters(points, numpoints, cluster_centersx, cluster_centersy, clusters);
+    #ifdef WANT_CLUSTERS_PRINTED
+        print_clusters(points, numpoints, cluster_centersx, cluster_centersy, clusters);
     #endif
-    
+
     #ifdef USE_HTML5
         html5_visualize_clusters(points, numpoints, cluster_centersx, cluster_centersy, clusters);
     #endif
-    
-    #ifdef WANT_CLUSTERS_PRINTED
-        print_clusters(points, numpoints, cluster_centersx, cluster_centersy, clusters);
+
+    #ifdef USE_SDL
+        sdl_visualize_clusters(points, numpoints, cluster_centersx, cluster_centersy, clusters);
     #endif
 }
 
