@@ -25,6 +25,7 @@
 #ifdef USE_SDL
 
 #include <SDL/SDL.h>
+#include <math.h>
 
 void fill_circle(SDL_Surface *surface, int cx, int cy, int radius, Uint32 pixel);
 

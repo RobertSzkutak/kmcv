@@ -24,6 +24,7 @@
 #ifdef USE_HTML5
 
 #include <sstream>
+#include <fstream>
 
 void html5_visualize_clusters(point *points, int numpoints, int *cluster_centersx, int *cluster_centersy, int clusters);
 

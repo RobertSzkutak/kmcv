@@ -25,7 +25,11 @@
     #include "sdl.h"
 #endif
 
-void print_clusters(points, numpoints, cluster_centersx, cluster_centersy, clusters)
+#ifdef USE_HTML5
+    #include "html.h"
+#endif
+
+void print_clusters(point *points, int numpoints, int *cluster_centersx, int *cluster_centersy, int clusters)
 {
     std::ofstream out("output.txt");
     out << "Clusters:\n\n";
@@ -176,8 +180,8 @@ void cluster(int clusters, int * pointsx, int * pointsy, int numpoints)
         sdl_visualize_clusters(points, numpoints, cluster_centersx, cluster_centersy, clusters);
     #endif
     
-    #ifdef USE_HTML
-        html_visualize_clusters(points, numpoints, cluster_centersx, cluster_centersy, clusters);
+    #ifdef USE_HTML5
+        html5_visualize_clusters(points, numpoints, cluster_centersx, cluster_centersy, clusters);
     #endif
     
     #ifdef WANT_CLUSTERS_PRINTED
