@@ -1,9 +1,9 @@
 CC = g++
 SOURCES = main.cpp util.cpp sdl.cpp html.cpp
-OUTPUT = -o cv
+OUTPUT = -o kmcv
 
-gradproject:
+kmcv:
 	$(CC) $(SOURCES) $(OUTPUT) `sdl-config --cflags --libs`
 
 clean:
-	rm -f cv
+	rm -f kmcv
