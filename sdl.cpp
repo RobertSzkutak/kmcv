@@ -26,29 +26,6 @@
 
 void sdl_visualize_clusters(point *points, int numpoints, int *cluster_centersx, int *cluster_centersy, int clusters)
 {
-    int maxw = 0, lw = WINW;    
-    for(int i = 0; i < numpoints; i++)
-    {
-        if(points[i].x > maxw)
-            maxw = points[i].x;
-        if(points[i].x < lw)
-            lw = points[i].x;
-    }
-    int maxh = 0, lh = WINH;   
-    for(int i = 0; i < numpoints; i++)
-    {
-        if(points[i].y > maxh)
-            maxh = points[i].y;
-        if(points[i].y < lh)
-            lh = points[i].y;
-    }
-
-    #ifdef DEBUG
-        std::ostringstream convert1, convert2;
-        convert1 << maxw;
-        convert2 << maxh;
-        debug("Maxw: " + convert1.str() + " Maxh: " + convert2.str());
-    #endif
     SDL_Init(SDL_INIT_VIDEO);
 
     SDL_WM_SetCaption("Cluster Visualization", "SDL Test");
@@ -59,9 +36,15 @@ void sdl_visualize_clusters(point *points, int numpoints, int *cluster_centersx,
 
     //Draw axis
     #ifdef WANT_AXIS_DRAWN
+        int totx = 0, toty = 0;    
+        for(int i = 0; i < numpoints; i++)
+        {
+            totx += points[i].x;
+            toty += points[i].y;
+        }
         debug("Drawing axis...");
-        SDL_Rect xaxis = {0, (maxh+lh)/2, WINW, 1};
-        SDL_Rect yaxis = {(maxw+lw)/2, 0, 1, WINH};
+        SDL_Rect xaxis = {0, toty/numpoints, WINW, 1};
+        SDL_Rect yaxis = {totx/numpoints, 0, 1, WINH};
         SDL_FillRect(screen, &xaxis, BLACK);
         SDL_FillRect(screen, &yaxis, BLACK);
     #endif
