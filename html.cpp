@@ -57,6 +57,32 @@ void html5_visualize_clusters(point *points, int numpoints, int *cluster_centers
     function draw()\
     {\
     context.clearRect(0, 0, canvas.width, canvas.height);";
+
+    //Draw axis
+    #ifdef WANT_AXIS_DRAWN
+        int totx = 0, toty = 0;    
+        for(int i = 0; i < numpoints; i++)
+        {
+            totx += points[i].x;
+            toty += points[i].y;
+        }
+        std::ostringstream avgx, avgy;
+        avgx << totx / numpoints;
+        avgy << toty / numpoints;
+        //Draw Y Axis
+        script += "context.fillStyle = \"rgb(0, 0, 0)\";";
+        script += "context.beginPath();";
+        script += "context.moveTo(" + avgx.str() + ",0);\
+                   context.lineTo(" + avgx.str() + "," + convert2.str() + ");\
+                   context.closePath();\
+                   context.stroke();";
+        //Draw X axis
+        script += "context.beginPath();";
+        script += "context.moveTo(0," + avgy.str() + ");\
+                   context.lineTo(" + convert.str() + "," + avgy.str() + ");\
+                   context.closePath();\
+                   context.stroke();";
+    #endif
     
     //Plot points
     for(int i = 0; i < numpoints; i++)
