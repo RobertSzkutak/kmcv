@@ -20,6 +20,15 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
+#define WANT_RANDOM 1 //If you want to use random points
+//#define WANT_READIN 1 //If you want to use points from a file
+
+#ifdef WANT_RANDOM
+    #ifdef WANT_READIN
+        #error You cannot have both WANT_RANDOM and WANT_READIN defined
+    #endif
+#endif
+
 #define CLUSTERS 4 //Number of clusters to arrange points into
 #define POINTS 500 //Number of points to generate if random generation is used
 //#define WANT_CENTERS_DRAWN 1 //Whether or not to draw the cluster centers in the rendering of clusters
@@ -34,7 +43,7 @@
 #define WINW 720 //Window Width
 #define WINH 480 //Window Height
 
-//Color constants
+//Color constants for SDL
 #define ALPHA 0xFF000000
 
 #define WHITE 0xFFFFFF

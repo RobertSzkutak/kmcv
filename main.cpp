@@ -261,9 +261,13 @@ int main (int argc, char *argv[])
 {
     srand(time(0));
     
-    randomPoints();
+    #ifdef WANT_RANDOM
+        randomPoints();
+    #endif
 
-    //readInPoints();
+    #ifdef WANT_READIN
+        readInPoints();
+    #endif
 
     return 0;
 }
