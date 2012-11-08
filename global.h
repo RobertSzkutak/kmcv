@@ -31,7 +31,7 @@
 
 #define CLUSTERS 4 //Number of clusters to arrange points into
 #define POINTS 500 //Number of points to generate if random generation is used
-//#define WANT_CENTERS_DRAWN 1 //Whether or not to draw the cluster centers in the rendering of clusters
+#define WANT_CENTERS_DRAWN 1 //Whether or not to draw the cluster centers in the rendering of clusters
 #define WANT_AXIS_DRAWN 1 //Whether or not to draw a mean axis in the rendering of clusters
 #define WANT_CLUSTERS_PRINTED 1 //Whether or not to make an output file detailing the clusters, cluster centers, and clusters that each point belongs to
 

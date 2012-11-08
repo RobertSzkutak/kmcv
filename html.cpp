@@ -83,6 +83,39 @@ void html5_visualize_clusters(point *points, int numpoints, int *cluster_centers
                    context.closePath();\
                    context.stroke();";
     #endif
+
+    //Draw Cluster Centers
+    #ifdef WANT_CENTERS_DRAWN
+        for(int i = 0; i < clusters; i++)
+        {
+            std::ostringstream x, y;
+            x << cluster_centersx[i];
+            y << cluster_centersy[i];
+            
+            script += "context.beginPath();";
+            script += "context.arc(" + x.str() + ", " + y.str() + ", 5, 0, 2 * Math.PI, false);";
+            switch(i)
+            {
+                case 0:
+                  script += "context.fillStyle = \"rgb(255,0,0)\";";//Red
+                  break;
+                case 1:
+                  script += "context.fillStyle = \"rgb(0,255,0)\";";//Green
+                  break;
+                case 2:
+                  script += "context.fillStyle = \"rgb(0,0,255)\";";//Blue
+                  break;
+                case 3:
+                  script += "context.fillStyle = \"rgb(255,0,255)\";";//Pink
+                  break;
+                default:
+                  script += "context.fillStyle = \"rgb(0,0,0)\";";//Black
+                  break;
+            }
+            script += "context.fill();";
+            script += "context.closePath();";
+        }
+    #endif
     
     //Plot points
     for(int i = 0; i < numpoints; i++)
