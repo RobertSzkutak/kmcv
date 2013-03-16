@@ -147,9 +147,6 @@ void html5_visualize_clusters(point *points, int numpoints, int *cluster_centers
     }
     
     script += "}";
-    
-    //TODO : Draw cluster centers
-    //TODO : Draw axis
 	
 	out << top << script << bottom;
 	out.close();

@@ -20,8 +20,8 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-#define WANT_RANDOM 1 //If you want to use random points
-//#define WANT_READIN 1 //If you want to use points from a file
+//#define WANT_RANDOM 1 //If you want to use random points
+#define WANT_READIN 1 //If you want to use points from a file
 
 #ifdef WANT_RANDOM
     #ifdef WANT_READIN
@@ -40,7 +40,7 @@
 
 //#define DEBUG 1 //Whether or not to output debug information to the terminal
 
-#define WINW 720 //Window Width
+#define WINW 640 //Window Width
 #define WINH 480 //Window Height
 
 //Color constants for SDL
