@@ -108,6 +108,12 @@ void cluster(int clusters, int * pointsx, int * pointsy, int numpoints)
             cluster_centersy[i] = rand() % max_y + 1;
         #endif
         cluster_count[i] = 0;
+
+        #ifdef DEBUG
+            std::cout << "Initial cluster centers: \n";
+            for(int i = 0; i < clusters; i++)
+                std::cout << "(" << cluster_centersx[i] << "," << cluster_centersy[i] << ")\n";
+        #endif
     }
 
     bool exit = false;
@@ -120,12 +126,12 @@ void cluster(int clusters, int * pointsx, int * pointsy, int numpoints)
         //Assign points to a cluster
         for(int i = 0; i < numpoints; i++)
         {
-            int cluster_score = WINW * WINH;//Something so high it could never happen
+            unsigned int cluster_score = WINW * WINH * 1000;//Something so high it could never happen
 
             for(int j = 0; j < clusters; j++)
             {
-                debug("Computing new cluster score...");
-                int new_cluster_score = abs(points[i].x - cluster_centersx[j]) + abs(points[i].y - cluster_centersy[j]);
+                //debug("Computing new cluster score...");
+                unsigned int new_cluster_score = abs(points[i].x - cluster_centersx[j]) + abs(points[i].y - cluster_centersy[j]);
                 if(new_cluster_score < cluster_score)
                 {
                     cluster_score = new_cluster_score;
@@ -150,7 +156,7 @@ void cluster(int clusters, int * pointsx, int * pointsy, int numpoints)
             }
 
             debug("Computing new centers for clusters...");
-            if(cluster_count[i] > 0)
+            if(cluster_count[i] > 0)//If there are actually points inside this cluster..
             {
                 int new_center_x = (int) all_x / cluster_count[i];
                 int new_center_y = (int) all_y / cluster_count[i];
@@ -161,31 +167,65 @@ void cluster(int clusters, int * pointsx, int * pointsy, int numpoints)
                     cluster_centersy[i] = new_center_y;
                     exit = false;//The loop will repeat
                 }
-            }
-            else//Make cluster center be the point closest to the cluster center if no points are contained in the cluster
-            {
-                int score = WINW * WINH;
-                int place = 0;
-                for(int j = 0; j < numpoints; j++)
-                {
-                    int newscore = abs(cluster_centersx[i] - points[j].x) + abs(cluster_centersy[i] - points[j].y);
-                    if(newscore < score)
-                    {
-                        bool hack = false;
-                        for(int x = 0; x < clusters; x++)
-                            if(cluster_count[x] == 1 && points[j].cluster == x)
-                                hack = true;
-                        if(hack = false)//if no other clusters contain only this point
+
+                //If two cluster centers are the same, give the one with less points a different center
+                for(int j = 0; j < clusters-1; j++)
+                    for(int h = j + 1; h < clusters; h++)
+                        if(cluster_centersx[j] == cluster_centersx[h] && cluster_centersy[j] == cluster_centersy[h])
                         {
-                            score = newscore;
-                            place = j;
-                            cluster_count[points[j].cluster]--;
+                            debug("Problem identified! Changing cluster centers...");
+                            int change = 0;
+                            if(cluster_count[j] > cluster_count[h])
+                            {
+                                change = j;
+                            }
+                            else
+                            {
+                                change = h;
+                            }
+                            cluster_count[change] = 0;
+                            while(true)
+                            {
+                                int k = rand() % numpoints;
+                                if(points[k].x != cluster_centersx[change] && points[k].y != cluster_centersy[change])
+                                {
+                                    debug("Found a usable point...");
+                                    cluster_count[points[k].cluster]--;
+                                    points[k].cluster = change;
+                                    cluster_centersx[change] = points[k].x;
+                                    cluster_centersy[change] = points[k].y;
+                                    break;
+                                }
+                            }
+                            exit = false;
                         }
+
+                #ifdef DEBUG
+                    debug("Cluster centers are: ");
+                    for(int j = 0; j < clusters; j++)
+                    {
+                        std::cout << "(" << cluster_centersx[j] << "," << cluster_centersy[j] << ")\n";
                     }
-                }
-                cluster_centersx[i] = points[place].x;
-                cluster_centersy[i] = points[place].y;
-                points[place].cluster = i;
+                #endif
+            }
+            else//Choose a new starting cluster center if no points are contained in the cluster
+            {
+                #ifdef WANT_RANDOM
+                    cluster_centersx[i] = rand() % WINW + 1;
+                    cluster_centersy[i] = rand() % WINH + 1;
+                #else
+                    int max_x = 0, max_y = 0;
+                    for(int j = 0; j < numpoints; j++)
+                    {
+                    if(points[j].x > max_x)
+                        max_x = points[j].x;
+                    if(points[j].y > max_y)
+                        max_y = points[j].y;
+                    }
+                        cluster_centersx[i] = rand() % max_x + 1;
+                        cluster_centersy[i] = rand() % max_y + 1;
+                #endif
+                exit = false;
             }
         }
     }
