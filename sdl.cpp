@@ -42,7 +42,10 @@
 
 SDL_Surface* screen;
 
-void move_points(int dir, point *points, int numpoints, int *cluster_centersx, int *cluster_centersy, int clusters);
+void draw_points(point *points, int numpoints, int *cluster_centersx, int *cluster_centersy, int clusters);
+void adjustOffset(int dir);
+
+bool up = false, down = false, right = false, left = false;
 
 void sdl_visualize_clusters(point *points, int numpoints, int *cluster_centersx, int *cluster_centersy, int clusters)
 {
@@ -54,7 +57,7 @@ void sdl_visualize_clusters(point *points, int numpoints, int *cluster_centersx,
     SDL_Rect rect = {0, 0, WINW, WINH};
     SDL_FillRect(screen, &rect, WHITE);
 
-    move_points(-1, points, numpoints, cluster_centersx, cluster_centersy, clusters);	
+    draw_points(points, numpoints, cluster_centersx, cluster_centersy, clusters);	
 
     debug("Entering input loop...");
     SDL_Event event;
@@ -72,18 +75,39 @@ void sdl_visualize_clusters(point *points, int numpoints, int *cluster_centersx,
                 case SDL_KEYDOWN:
                   switch (event.key.keysym.sym) 
                   {
-		      case SDLK_UP:
-			move_points(UP, points, numpoints, cluster_centersx, cluster_centersy, clusters);
-			break;
-		      case SDLK_DOWN:
-			move_points(DOWN, points, numpoints, cluster_centersx, cluster_centersy, clusters);
-			break;
-		      case SDLK_RIGHT:
-			move_points(RIGHT, points, numpoints, cluster_centersx, cluster_centersy, clusters);
-			break;
-		      case SDLK_LEFT:
-			move_points(LEFT, points, numpoints, cluster_centersx, cluster_centersy, clusters);
-			break;
+		                case SDLK_UP:
+			                up = true;
+			            break;
+		                case SDLK_DOWN:
+			                down = true;
+			            break;
+		                case SDLK_RIGHT:
+			                right = true;
+			            break;
+		                case SDLK_LEFT:
+			                left = true;
+			            break;
+                      case SDLK_ESCAPE:
+                      case SDLK_q:
+                        exit = 1;
+                        break;
+                  }
+                  break;
+                case SDL_KEYUP:
+                  switch (event.key.keysym.sym) 
+                  {
+		                case SDLK_UP:
+			                up = false;
+			            break;
+		                case SDLK_DOWN:
+			                down = false;
+			            break;
+		                case SDLK_RIGHT:
+			                right = false;
+			            break;
+		                case SDLK_LEFT:
+			                left = false;
+			            break;
                       case SDLK_ESCAPE:
                       case SDLK_q:
                         exit = 1;
@@ -91,6 +115,18 @@ void sdl_visualize_clusters(point *points, int numpoints, int *cluster_centersx,
                   }
                   break;
             }
+        }
+        if(up == true)
+            adjustOffset(UP);
+        if(down == true)
+            adjustOffset(DOWN);
+        if(left == true)
+            adjustOffset(LEFT);
+        if(right == true)
+            adjustOffset(RIGHT);
+        if(up == true || down == true || left == true || right == true)
+        {
+            draw_points(points, numpoints, cluster_centersx, cluster_centersy, clusters);
         }
         SDL_UpdateRect(screen, 0, 0, 0, 0);
     }
@@ -102,17 +138,21 @@ int offset_x = ORIGIN_X, offset_y = ORIGIN_Y;
 #else
 int offset_x = 0, offset_y = 0;
 #endif
-void move_points(int dir, point *points, int numpoints, int *cluster_centersx, int *cluster_centersy, int clusters)
+int offsetSpeed = 2;
+void adjustOffset(int dir)
 {
-	if(dir == LEFT)
-	    offset_x -= 10;
+    if(dir == LEFT)
+	    offset_x -= offsetSpeed;
 	if(dir == RIGHT)
-	    offset_x += 10;
+	    offset_x += offsetSpeed;
 	if(dir == DOWN)
-	    offset_y += 10;
+	    offset_y += offsetSpeed;
     if(dir == UP)
-	    offset_y -= 10;
+	    offset_y -= offsetSpeed;
+}
 
+void draw_points(point *points, int numpoints, int *cluster_centersx, int *cluster_centersy, int clusters)
+{
   	SDL_Rect rect = {0, 0, WINW, WINH};
     SDL_FillRect(screen, &rect, WHITE);
 
