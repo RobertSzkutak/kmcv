@@ -92,8 +92,21 @@ void cluster(int clusters, int * pointsx, int * pointsy, int numpoints)
     int cluster_centersx[clusters], cluster_centersy[clusters], cluster_count[clusters];
     for(int i = 0; i < clusters; i++)
     {
-        cluster_centersx[i] = rand() % WINW + 1;
-        cluster_centersy[i] = rand() % WINH + 1;
+        #ifdef WANT_RANDOM
+            cluster_centersx[i] = rand() % WINW + 1;
+            cluster_centersy[i] = rand() % WINH + 1;
+        #else
+            int max_x = 0, max_y = 0;
+            for(int j = 0; j < numpoints; j++)
+            {
+                if(points[j].x > max_x)
+                    max_x = points[j].x;
+                if(points[j].y > max_y)
+                    max_y = points[j].y;
+            }
+            cluster_centersx[i] = rand() % max_x + 1;
+            cluster_centersy[i] = rand() % max_y + 1;
+        #endif
         cluster_count[i] = 0;
     }
 
