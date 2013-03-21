@@ -29,6 +29,17 @@
 #define UP 3
 #define DOWN 4
 
+//Without this defined the origin of the graph will be (0,0)
+//#define WANT_MEAN_AXIS 1 //Creates an axis where the origin of the axis is the mean of all X and Y points
+
+//Support for a custom SDL coordinate pair (X,Y) where the origin for your generated graph lies
+#define ORIGIN 1
+
+#ifdef ORIGIN
+    #define ORIGIN_X WINW / 2
+    #define ORIGIN_Y WINH / 2
+#endif
+
 SDL_Surface* screen;
 
 void move_points(int dir, point *points, int numpoints, int *cluster_centersx, int *cluster_centersy, int clusters);
@@ -43,66 +54,7 @@ void sdl_visualize_clusters(point *points, int numpoints, int *cluster_centersx,
     SDL_Rect rect = {0, 0, WINW, WINH};
     SDL_FillRect(screen, &rect, WHITE);
 
-    //Draw axis
-    #ifdef WANT_AXIS_DRAWN
-        int totx = 0, toty = 0;    
-        for(int i = 0; i < numpoints; i++)
-        {
-            totx += points[i].x;
-            toty += points[i].y;
-        }
-        debug("Drawing axis...");
-        SDL_Rect xaxis = {0, toty/numpoints, WINW, 1};
-        SDL_Rect yaxis = {totx/numpoints, 0, 1, WINH};
-        SDL_FillRect(screen, &xaxis, BLACK);
-        SDL_FillRect(screen, &yaxis, BLACK);
-    #endif
-
-    //TODO : Generate a random color for each cluster
-
-    debug("Plotting points...");
-    //Draw points
-    for(int i = 0; i < numpoints; i++)
-    {
-        SDL_Rect pixel = {points[i].x-2, points[i].y-2, 5, 5};//Offset of -3 makes center pixel of 5x5 appear at x,y 
-        switch(points[i].cluster)
-        {
-            case 0:
-              SDL_FillRect(screen, &pixel, RED);
-              break;
-            case 1:
-              SDL_FillRect(screen, &pixel, GREEN);
-              break;
-            case 2:
-              SDL_FillRect(screen, &pixel, BLUE);
-              break;
-            case 3:
-              SDL_FillRect(screen, &pixel, PINK);
-              break;
-            default:
-              SDL_FillRect(screen, &pixel, BLACK);
-              break;
-        }
-    }
-
-    //Draw Cluster Centers
-    #ifdef WANT_CENTERS_DRAWN
-        debug("Drawing cluster centers...");
-        for(int i = 0; i < clusters; i++)
-        {
-            if(cluster_centersy[i] - 10  >= 0 && cluster_centersy[i] + 10  <= WINH && cluster_centersx[i] - 10  >= 0 && cluster_centersx[i] + 10  <= WINW)
-            {//Causes a crash if a circle is drawn off the screen partially. I need a better circle function..
-                if(i == 0)
-                    fill_circle(screen, cluster_centersx[i], cluster_centersy[i], 10, (ALPHA | RED));
-                if(i == 1)
-                    fill_circle(screen, cluster_centersx[i], cluster_centersy[i], 10, (ALPHA | GREEN));
-                if(i == 2)
-                    fill_circle(screen, cluster_centersx[i], cluster_centersy[i], 10, (ALPHA | BLUE));
-                if(i >= 3)
-                    fill_circle(screen, cluster_centersx[i], cluster_centersy[i], 10, (ALPHA | PINK));
-            }
-        }
-    #endif	
+    move_points(-1, points, numpoints, cluster_centersx, cluster_centersy, clusters);	
 
     debug("Entering input loop...");
     SDL_Event event;
@@ -145,8 +97,11 @@ void sdl_visualize_clusters(point *points, int numpoints, int *cluster_centersx,
     SDL_Quit();
 }
 
+#ifdef ORIGIN
+int offset_x = ORIGIN_X, offset_y = ORIGIN_Y;
+#else
 int offset_x = 0, offset_y = 0;
-
+#endif
 void move_points(int dir, point *points, int numpoints, int *cluster_centersx, int *cluster_centersy, int clusters)
 {
 	if(dir == LEFT)
@@ -155,7 +110,7 @@ void move_points(int dir, point *points, int numpoints, int *cluster_centersx, i
 	    offset_x += 10;
 	if(dir == DOWN)
 	    offset_y += 10;
-        if(dir == UP)
+    if(dir == UP)
 	    offset_y -= 10;
 
   	SDL_Rect rect = {0, 0, WINW, WINH};
@@ -163,17 +118,24 @@ void move_points(int dir, point *points, int numpoints, int *cluster_centersx, i
 
     //Draw axis
     #ifdef WANT_AXIS_DRAWN
-        int totx = 0, toty = 0;    
-        for(int i = 0; i < numpoints; i++)
-        {
-            totx += points[i].x;
-            toty += points[i].y;
-        }
-        debug("Drawing axis...");
-        SDL_Rect xaxis = {0, toty/numpoints+offset_y, WINW, 1};
-        SDL_Rect yaxis = {totx/numpoints+offset_x, 0, 1, WINH};
-        SDL_FillRect(screen, &xaxis, BLACK);
-        SDL_FillRect(screen, &yaxis, BLACK);
+        #ifdef WANT_MEAN_AXIS
+            int totx = 0, toty = 0;    
+            for(int i = 0; i < numpoints; i++)
+            {
+                totx += points[i].x;
+                toty += points[i].y;
+            }
+            debug("Drawing axis...");
+            SDL_Rect xaxis = {0, toty/numpoints+offset_y, WINW, 1};
+            SDL_Rect yaxis = {totx/numpoints+offset_x, 0, 1, WINH};
+            SDL_FillRect(screen, &xaxis, BLACK);
+            SDL_FillRect(screen, &yaxis, BLACK);
+        #else
+            SDL_Rect xaxis = {0, 0+offset_y, WINW, 1};
+            SDL_Rect yaxis = {0+offset_x, 0, 1, WINH};
+            SDL_FillRect(screen, &xaxis, BLACK);
+            SDL_FillRect(screen, &yaxis, BLACK);
+        #endif
     #endif
 
     //TODO : Generate a random color for each cluster
