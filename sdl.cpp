@@ -30,7 +30,7 @@
 #define DOWN 4
 
 //Without this defined the origin of the graph will be (0,0)
-//#define WANT_MEAN_AXIS 1 //Creates an axis where the origin of the axis is the mean of all X and Y points
+#define WANT_MEAN_AXIS 1 //Creates an axis where the origin of the axis is the mean of all X and Y points
 
 //Support for a custom SDL coordinate pair (X,Y) where the origin for your generated graph lies
 #define ORIGIN 1
@@ -169,7 +169,11 @@ void draw_points(point *points, int numpoints, int *cluster_centersx, int *clust
                 toty += points[i].y;
             }
             debug("Drawing axis...");
-            SDL_Rect xaxis = {0, toty/numpoints+offset_y, WINW, 1};
+            #ifdef MIRROR_Y
+                SDL_Rect xaxis = {0, toty/numpoints*-1+offset_y, WINW, 1};
+            #else
+                SDL_Rect xaxis = {0, toty/numpoints+offset_y, WINW, 1};
+            #endif
             SDL_Rect yaxis = {totx/numpoints+offset_x, 0, 1, WINH};
             SDL_FillRect(screen, &xaxis, BLACK);
             SDL_FillRect(screen, &yaxis, BLACK);
