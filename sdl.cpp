@@ -40,6 +40,9 @@
     #define ORIGIN_Y WINH / 2
 #endif
 
+//Option to reflect points across the X axis (inverting Y value (eg. 603 == -603)) to make it look more like a traditional graph
+#define MIRROR_Y 1
+
 SDL_Surface* screen;
 
 void draw_points(point *points, int numpoints, int *cluster_centersx, int *cluster_centersy, int clusters);
@@ -141,13 +144,13 @@ int offset_x = 0, offset_y = 0;
 int offsetSpeed = 2;
 void adjustOffset(int dir)
 {
-    if(dir == LEFT)
+    if(dir == RIGHT)
 	    offset_x -= offsetSpeed;
-	if(dir == RIGHT)
+	if(dir == LEFT)
 	    offset_x += offsetSpeed;
-	if(dir == DOWN)
+	if(dir == UP)
 	    offset_y += offsetSpeed;
-    if(dir == UP)
+    if(dir == DOWN)
 	    offset_y -= offsetSpeed;
 }
 
@@ -184,7 +187,11 @@ void draw_points(point *points, int numpoints, int *cluster_centersx, int *clust
     //Draw points
     for(int i = 0; i < numpoints; i++)
     {
-        SDL_Rect pixel = {points[i].x-2+offset_x, points[i].y-2+offset_y, 5, 5};//Offset of -3 makes center pixel of 5x5 appear at x,y 
+        #ifdef MIRROR_Y
+            SDL_Rect pixel = {points[i].x-2+offset_x, points[i].y*-1-2+offset_y, 5, 5};
+        #else
+            SDL_Rect pixel = {points[i].x-2+offset_x, points[i].y-2+offset_y, 5, 5};//Offset of -3 makes center pixel of 5x5 appear at x,y 
+        #endif
         switch(points[i].cluster)
         {
             case 0:
@@ -210,16 +217,29 @@ void draw_points(point *points, int numpoints, int *cluster_centersx, int *clust
         debug("Drawing cluster centers...");
         for(int i = 0; i < clusters; i++)
         {
+            #ifdef MIRROR_Y
+            if(cluster_centersy[i]*-1 + offset_y - 10  >= 0 && cluster_centersy[i]*-1 + offset_y + 10  <= WINH && cluster_centersx[i] + offset_x - 10  >= 0 && cluster_centersx[i] + offset_x + 10  <= WINW)
+            {
+            #else
             if(cluster_centersy[i] + offset_y - 10  >= 0 && cluster_centersy[i] + offset_y + 10  <= WINH && cluster_centersx[i] + offset_x - 10  >= 0 && cluster_centersx[i] + offset_x + 10  <= WINW)
             {//Causes a crash if a circle is drawn off the screen partially. I need a better circle function..
+            #endif
+                Uint32 col = 0;
                 if(i == 0)
-                    fill_circle(screen, cluster_centersx[i]+offset_x, cluster_centersy[i]+offset_y, 10, (ALPHA | RED));
+                    col = (ALPHA | RED);
                 if(i == 1)
-                    fill_circle(screen, cluster_centersx[i]+offset_x, cluster_centersy[i]+offset_y, 10, (ALPHA | GREEN));
+                    col = (ALPHA | GREEN);
                 if(i == 2)
-                    fill_circle(screen, cluster_centersx[i]+offset_x, cluster_centersy[i]+offset_y, 10, (ALPHA | BLUE));
+                    col = (ALPHA | BLUE);
                 if(i >= 3)
-                    fill_circle(screen, cluster_centersx[i]+offset_x, cluster_centersy[i]+offset_y, 10, (ALPHA | PINK));
+                    col = (ALPHA | PINK);
+
+                #ifdef MIRROR_Y
+                    fill_circle(screen, cluster_centersx[i]+offset_x, (cluster_centersy[i]*-1+offset_y), 10, col);
+                    //std::cout << "(" << cluster_centersx[i]+offset_x << "," << (cluster_centersy[i]*-1+offset_y) << ")\n";
+                #else
+                    fill_circle(screen, cluster_centersx[i]+offset_x, cluster_centersy[i]+offset_y, 10, col);
+                #endif
             }
         }
     #endif			
