@@ -42,6 +42,29 @@ void html5_visualize_clusters(point *points, int numpoints, int *cluster_centers
 	script += "var canvas = null;\
                var context = null;\
                window.onload = init;\
+               var offset_x = 0;\
+               var offset_y = 0;\
+               var speed = 2;\n\
+               window.addEventListener(\'keydown\', function(event)\n\
+               {\n\
+                switch (event.keyCode)\n\
+                {\n\
+                    case 32: //Spacebar\n\
+                     break;\
+                    case 37: //Left\n\
+                     offset_x += speed;\
+                    break;\
+                    case 38: // Up\n\
+                     offset_y += speed;\
+                    break;\
+                    case 39: // Right\n\
+                     offset_x -= speed;\
+                    break;\
+                    case 40: // Down\n\
+                     offset_y -= speed;\
+                    break;\
+                }\
+               }, false);\
                function init()\
                {\
 	               canvas = document.getElementById('myCanvas');\
@@ -52,7 +75,7 @@ void html5_visualize_clusters(point *points, int numpoints, int *cluster_centers
     convert2 << WINH;
     script += convert.str() + ";\
 	canvas.height = " + convert2.str() +";\
-	draw();\
+	setInterval(draw, 1000 / 30);\
                   }\
     function draw()\
     {\
@@ -68,33 +91,37 @@ void html5_visualize_clusters(point *points, int numpoints, int *cluster_centers
         }
         std::ostringstream avgx, avgy;
         avgx << totx / numpoints;
-        avgy << toty / numpoints;
+        #ifdef MIRROR_Y
+            avgy << toty / numpoints * -1;
+        #else
+            avgy << toty / numpoints;
+        #endif
         #ifdef WANT_MEAN_AXIS
             //Draw Y Axis
             script += "context.fillStyle = \"rgb(0, 0, 0)\";";
             script += "context.beginPath();";
-            script += "context.moveTo(" + avgx.str() + ",0);\
-                       context.lineTo(" + avgx.str() + "," + convert2.str() + ");\
+            script += "context.moveTo(" + avgx.str() + "+offset_x,0);\
+                       context.lineTo(" + avgx.str() + "+offset_x," + convert2.str() + ");\
                        context.closePath();\
                        context.stroke();";
             //Draw X axis
             script += "context.beginPath();";
-            script += "context.moveTo(0," + avgy.str() + ");\
-                       context.lineTo(" + convert.str() + "," + avgy.str() + ");\
+            script += "context.moveTo(0," + avgy.str() + "+offset_y);\
+                       context.lineTo(" + convert.str() + "," + avgy.str() + "+offset_y);\
                        context.closePath();\
                        context.stroke();";
         #else
             //Draw Y Axis
             script += "context.fillStyle = \"rgb(0, 0, 0)\";";
             script += "context.beginPath();";
-            script += "context.moveTo(0,0);\
-                       context.lineTo(0," + convert2.str() + ");\
+            script += "context.moveTo(0+offset_x,0);\
+                       context.lineTo(0+offset_x," + convert2.str() + ");\
                        context.closePath();\
                        context.stroke();";
             //Draw X axis
             script += "context.beginPath();";
-            script += "context.moveTo(0,0);\
-                       context.lineTo(" + convert.str() + ",0);\
+            script += "context.moveTo(0,0+offset_y);\
+                       context.lineTo(" + convert.str() + ",0+offset_y);\
                        context.closePath();\
                        context.stroke();";
         #endif
@@ -106,10 +133,14 @@ void html5_visualize_clusters(point *points, int numpoints, int *cluster_centers
         {
             std::ostringstream x, y;
             x << cluster_centersx[i];
-            y << cluster_centersy[i];
+            #ifdef MIRROR_Y
+                y << cluster_centersy[i]*-1;
+            #else
+                y << cluster_centersy[i];
+            #endif
             
             script += "context.beginPath();";
-            script += "context.arc(" + x.str() + ", " + y.str() + ", 5, 0, 2 * Math.PI, false);";
+            script += "context.arc(" + x.str() + "+offset_x, " + y.str() + "+offset_y, 5, 0, 2 * Math.PI, false);";
             switch(i)
             {
                 case 0:
@@ -163,7 +194,7 @@ void html5_visualize_clusters(point *points, int numpoints, int *cluster_centers
               break;
         }
         //Draw point
-        script += "context.fillRect(" + x.str() + ", " + y.str() + ", 5, 5);";
+        script += "context.fillRect(" + x.str() + "+offset_x, " + y.str() + "+offset_y, 5, 5);";
     }
     
     script += "}";
