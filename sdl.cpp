@@ -37,9 +37,6 @@
     #define ORIGIN_Y WINH / 2
 #endif
 
-//Option to reflect points across the X axis (inverting Y value (eg. 603 == -603)) to make it look more like a traditional graph
-#define MIRROR_Y 1
-
 SDL_Surface* screen;
 
 void draw_points(point *points, int numpoints, int *cluster_centersx, int *cluster_centersy, int clusters);

@@ -137,8 +137,12 @@ void html5_visualize_clusters(point *points, int numpoints, int *cluster_centers
     for(int i = 0; i < numpoints; i++)
     {
         std::ostringstream x, y;
-        x << points[i].x-2;//Offset of -2 makes center pixel of 5x5 appear at x,y 
-        y << points[i].y-2;
+        x << points[i].x-2;//Offset of -2 makes center pixel of 5x5 appear at x,y
+        #ifdef MIRROR_Y
+            y << points[i].y*-1-2;
+        #else
+            y << points[i].y-2;
+        #endif
         //Pick color
         switch(points[i].cluster)
         {
