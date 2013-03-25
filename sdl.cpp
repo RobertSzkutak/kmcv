@@ -29,9 +29,6 @@
 #define UP 3
 #define DOWN 4
 
-//Without this defined the origin of the graph will be (0,0)
-#define WANT_MEAN_AXIS 1 //Creates an axis where the origin of the axis is the mean of all X and Y points
-
 //Support for a custom SDL coordinate pair (X,Y) where the origin for your generated graph lies
 #define ORIGIN 1
 

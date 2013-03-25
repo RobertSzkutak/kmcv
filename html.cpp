@@ -69,19 +69,35 @@ void html5_visualize_clusters(point *points, int numpoints, int *cluster_centers
         std::ostringstream avgx, avgy;
         avgx << totx / numpoints;
         avgy << toty / numpoints;
-        //Draw Y Axis
-        script += "context.fillStyle = \"rgb(0, 0, 0)\";";
-        script += "context.beginPath();";
-        script += "context.moveTo(" + avgx.str() + ",0);\
-                   context.lineTo(" + avgx.str() + "," + convert2.str() + ");\
-                   context.closePath();\
-                   context.stroke();";
-        //Draw X axis
-        script += "context.beginPath();";
-        script += "context.moveTo(0," + avgy.str() + ");\
-                   context.lineTo(" + convert.str() + "," + avgy.str() + ");\
-                   context.closePath();\
-                   context.stroke();";
+        #ifdef WANT_MEAN_AXIS
+            //Draw Y Axis
+            script += "context.fillStyle = \"rgb(0, 0, 0)\";";
+            script += "context.beginPath();";
+            script += "context.moveTo(" + avgx.str() + ",0);\
+                       context.lineTo(" + avgx.str() + "," + convert2.str() + ");\
+                       context.closePath();\
+                       context.stroke();";
+            //Draw X axis
+            script += "context.beginPath();";
+            script += "context.moveTo(0," + avgy.str() + ");\
+                       context.lineTo(" + convert.str() + "," + avgy.str() + ");\
+                       context.closePath();\
+                       context.stroke();";
+        #else
+            //Draw Y Axis
+            script += "context.fillStyle = \"rgb(0, 0, 0)\";";
+            script += "context.beginPath();";
+            script += "context.moveTo(0,0);\
+                       context.lineTo(0," + convert2.str() + ");\
+                       context.closePath();\
+                       context.stroke();";
+            //Draw X axis
+            script += "context.beginPath();";
+            script += "context.moveTo(0,0);\
+                       context.lineTo(" + convert.str() + ",0);\
+                       context.closePath();\
+                       context.stroke();";
+        #endif
     #endif
 
     //Draw Cluster Centers

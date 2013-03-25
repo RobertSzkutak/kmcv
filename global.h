@@ -20,6 +20,7 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
+//kmcv options
 //#define WANT_RANDOM 1 //If you want to use random points
 #define WANT_READIN 1 //If you want to use points from a file
 
@@ -29,6 +30,9 @@
     #endif
 #endif
 
+//#define DEBUG 1 //Whether or not to output debug information to the terminal
+
+//k-means options
 #define CLUSTERS 4 //Number of clusters to arrange points into
 #define POINTS 500 //Number of points to generate if random generation is used
 #define WANT_CENTERS_DRAWN 1 //Whether or not to draw the cluster centers in the rendering of clusters
@@ -38,10 +42,10 @@
 #define USE_SDL 1 //Whether or not to use the SDL visualizer
 #define USE_HTML5 1 //Whether or not to use the HTML5 visualizer
 
-//#define DEBUG 1 //Whether or not to output debug information to the terminal
-
+//Visualizer options
 #define WINW 640 //Window Width
 #define WINH 480 //Window Height
+#define WANT_MEAN_AXIS 1//Creates an axis where the origin of the axis is the mean of all X and Y points
 
 //Color constants for SDL
 #define ALPHA 0xFF000000
