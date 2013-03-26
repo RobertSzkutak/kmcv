@@ -47,6 +47,12 @@
 #define WINH 480 //Window Height
 #define WANT_MEAN_AXIS 1//Creates an axis where the origin of the axis is the mean of all X and Y points
 #define MIRROR_Y 1 //Option to reflect points across the X axis (inverting Y value (eg. 603 == -603)) to make it look more like a traditional graph
+//Support for a custom coordinate pair (X,Y) where the origin (0,0) for your generated graph lies
+#define ORIGIN 1
+#ifdef ORIGIN
+    #define ORIGIN_X WINW / 2
+    #define ORIGIN_Y WINH / 2
+#endif
 
 //Color constants for SDL
 #define ALPHA 0xFF000000

@@ -41,10 +41,18 @@ void html5_visualize_clusters(point *points, int numpoints, int *cluster_centers
 	
 	script += "var canvas = null;\
                var context = null;\
-               window.onload = init;\
-               var offset_x = 0;\
-               var offset_y = 0;\
-               var speed = 2;\n\
+               window.onload = init;";
+    #ifdef ORIGIN
+      std::ostringstream ox, oy;
+      ox << ORIGIN_X;
+      oy << ORIGIN_Y;
+      script += "var offset_x = " + ox.str() + ";\
+                 var offset_y = " + oy.str() + ";";
+    #else
+      script += "var offset_x = 0;\
+                 var offset_y = 0;";
+    #endif
+    script += "var speed = 2;\n\
                window.addEventListener(\'keydown\', function(event)\n\
                {\n\
                 switch (event.keyCode)\n\

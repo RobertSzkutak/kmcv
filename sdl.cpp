@@ -29,14 +29,6 @@
 #define UP 3
 #define DOWN 4
 
-//Support for a custom SDL coordinate pair (X,Y) where the origin for your generated graph lies
-#define ORIGIN 1
-
-#ifdef ORIGIN
-    #define ORIGIN_X WINW / 2
-    #define ORIGIN_Y WINH / 2
-#endif
-
 SDL_Surface* screen;
 
 void draw_points(point *points, int numpoints, int *cluster_centersx, int *cluster_centersy, int clusters);
