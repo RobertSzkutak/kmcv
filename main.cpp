@@ -32,9 +32,13 @@
 void print_clusters(point *points, int numpoints, int *cluster_centersx, int *cluster_centersy, int clusters)
 {
     std::ofstream out("output.txt");
+    int clustersn[clusters];
+    
+    //Print cluster data
     out << "Clusters:\n\n";
     for(int i = 0; i < clusters; i++)
     {
+        clustersn[i] = 0;
         out << "Cluster " << i << ":" << std::endl;
         out << "Center: (" << cluster_centersx[i] << "," << cluster_centersy[i] << ")" << std::endl;
         out << "Cluster Points:" << std::endl;
@@ -43,10 +47,19 @@ void print_clusters(point *points, int numpoints, int *cluster_centersx, int *cl
             if(points[j].cluster == i)
             {
                 out << "(" << points[j].x << "," << points[j].y << ")" << std::endl;
+                clustersn[i]++;
             }
         }
         out << std::endl << std::endl << std::endl;
     }
+    
+    //Print cluster statistics
+    for(int i = 0; i < clusters; i++)
+    {
+        out << "Total points in cluster " << i << ": " << clustersn[i] << std::endl;
+        out << "Chance of belonging to cluster " << i << ": " << (double) clustersn[i] / numpoints << std::endl;
+    }
+
     out.close();
 }
 
