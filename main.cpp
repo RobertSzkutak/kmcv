@@ -60,6 +60,57 @@ void print_clusters(point *points, int numpoints, int *cluster_centersx, int *cl
         out << "Chance of belonging to cluster " << i << ": " << (double) clustersn[i] / numpoints << std::endl;
     }
 
+    //Print data statistics
+    int avgx = 0, avgy = 0;
+    for(int i = 0; i < numpoints; i++)
+    {
+        avgx += points[i].x;
+        avgy += points[i].y;
+    }
+    avgx /= numpoints;
+    avgy /= numpoints;
+    out << std::endl << "Mean of data: (" << avgx << "," << avgy << ")" << std::endl << std::endl;
+    
+    int ul = 0, uls = 0, ur = 0, urs = 0, ll = 0, lls = 0, lr = 0, lrs = 0;
+    for(int i = 0; i < numpoints; i++)
+    {
+        //Find the upper leftmost point
+        if(points[i].x < avgx && points[i].y < avgy && uls < abs(points[i].x - avgx) + abs(points[i].y - avgy))
+        {
+            ul = i;
+            uls = abs(points[i].x - avgx) + abs(points[i].y - avgy);
+        }
+        //Find the upper rightmost point
+        if(points[i].x > avgx && points[i].y < avgy && urs < abs(points[i].x - avgx) + abs(points[i].y - avgy))
+        {
+            ur = i;
+            urs = abs(points[i].x - avgx) + abs(points[i].y - avgy);
+        }
+        //Find the lower leftmost point
+        if(points[i].x < avgx && points[i].y > avgy && lls < abs(points[i].x - avgx) + abs(points[i].y - avgy))
+        {
+            ll = i;
+            lls = abs(points[i].x - avgx) + abs(points[i].y - avgy);
+        }
+        //Find the lower rightmost point
+        if(points[i].x > avgx && points[i].y > avgy && lrs < abs(points[i].x - avgx) + abs(points[i].y - avgy))
+        {
+            lr = i;
+            lrs = abs(points[i].x - avgx) + abs(points[i].y - avgy);
+        }
+    }
+    #ifdef MIRROR_Y
+        out << "The lower leftmost point is (" << points[ul].x << "," << points[ul].y << ")" << std::endl;
+        out << "The lower rightmost point is (" << points[ur].x << "," << points[ur].y << ")" << std::endl;
+        out << "The upper leftmost point is (" << points[ll].x << "," << points[ll].y << ")" << std::endl;
+        out << "The upper rightmost point is (" << points[lr].x << "," << points[lr].y << ")";
+    #else
+        out << "The upper leftmost point is (" << points[ul].x << "," << points[ul].y << ")" << std::endl;
+        out << "The upper rightmost point is (" << points[ur].x << "," << points[ur].y << ")" << std::endl;
+        out << "The lower leftmost point is (" << points[ll].x << "," << points[ll].y << ")" << std::endl;
+        out << "The lower rightmost point is (" << points[lr].x << "," << points[lr].y << ")";
+    #endif
+
     out.close();
 }
 
