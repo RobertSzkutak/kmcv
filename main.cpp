@@ -409,6 +409,8 @@ void readInPoints()
         return;
     }
 
+    pif--;
+
     int pointsx[pif], pointsy[pif];
 
     std::ifstream file ("points.txt");
@@ -419,7 +421,7 @@ void readInPoints()
 
     if(file.is_open())
     {
-        while(file.good())
+        while(file.good() && count < pif)
         {
             getline(file, line);
             size_t comma = line.find(",");
