@@ -99,16 +99,60 @@ void print_clusters(point *points, int numpoints, int *cluster_centersx, int *cl
             lrs = abs(points[i].x - avgx) + abs(points[i].y - avgy);
         }
     }
+
     #ifdef MIRROR_Y
         out << "The lower leftmost point is (" << points[ul].x << "," << points[ul].y << ")" << std::endl;
         out << "The lower rightmost point is (" << points[ur].x << "," << points[ur].y << ")" << std::endl;
         out << "The upper leftmost point is (" << points[ll].x << "," << points[ll].y << ")" << std::endl;
-        out << "The upper rightmost point is (" << points[lr].x << "," << points[lr].y << ")";
+        out << "The upper rightmost point is (" << points[lr].x << "," << points[lr].y << ")" << std::endl << std::endl;
     #else
         out << "The upper leftmost point is (" << points[ul].x << "," << points[ul].y << ")" << std::endl;
         out << "The upper rightmost point is (" << points[ur].x << "," << points[ur].y << ")" << std::endl;
         out << "The lower leftmost point is (" << points[ll].x << "," << points[ll].y << ")" << std::endl;
-        out << "The lower rightmost point is (" << points[lr].x << "," << points[lr].y << ")";
+        out << "The lower rightmost point is (" << points[lr].x << "," << points[lr].y << ")" << std::endl << std::endl;
+    #endif
+
+    //Print Quadrant Statistics
+    int q1, q2, q3, q4;
+    q1=q2=q3=q4=0;
+    for(int i = 0; i < numpoints; i++)
+    {
+        //Upper left (quadrant 1)
+        if(points[i].x < avgx && points[i].y < avgy)
+        {
+            //out << "(" << points[i].x << "," << points[i].y << ")" << " is in quadrant 1 (lower left)\n";
+            q1++;
+        }
+
+        //Upper right (quadrant 2)
+        if(points[i].x > avgx && points[i].y < avgy)
+            q2++;
+        //Lower right (quadrant 3)
+        if(points[i].x > avgx && points[i].y > avgy)
+            q3++;
+        //Lower left (quadrant 4)
+        if(points[i].x < avgx && points[i].y > avgy)
+            q4++;
+    }
+
+    #ifdef MIRROR_Y
+        out << "Number of points in quadrant 1 (lower left): " << q1 << std::endl;
+        out << "Chance of landing in quadrant 1: " << (double) q1 / numpoints << std::endl;
+	    out << "Number of points in quadrant 2 (lower right): " << q2 << std::endl;
+        out << "Chance of landing in quadrant 2: " << (double) q2 / numpoints << std::endl;
+	    out << "Number of points in quadrant 3 (upper left): " << q3 << std::endl;
+        out << "Chance of landing in quadrant 3: " << (double) q3 / numpoints << std::endl;
+	    out << "Number of points in quadrant 4 (upper right): " << q4 << std::endl;
+        out << "Chance of landing in quadrant 4: " << (double) q4 / numpoints << std::endl;
+    #else
+        out << "Number of points in quadrant 1 (lower left): " << q4 << std::endl;
+        out << "Chance of landing in quadrant 1: " << (double) q4 / numpoints << std::endl;
+	    out << "Number of points in quadrant 2 (lower right): " << q3 << std::endl;
+        out << "Chance of landing in quadrant 2: " << (double) q3 / numpoints << std::endl;
+	    out << "Number of points in quadrant 3 (upper left): " << q2 << std::endl;
+        out << "Chance of landing in quadrant 3: " << (double) q2 / numpoints << std::endl;
+	    out << "Number of points in quadrant 4 (upper right): " << q1 << std::endl;
+        out << "Chance of landing in quadrant 4: " << (double) q1 / numpoints << std::endl;
     #endif
 
     out.close();

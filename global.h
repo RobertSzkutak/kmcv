@@ -43,8 +43,8 @@
 #define USE_HTML5 1 //Whether or not to use the HTML5 visualizer
 
 //Visualizer options
-#define WINW 640 //Window Width
-#define WINH 480 //Window Height
+#define WINW 2048 //Window Width
+#define WINH 2048 //Window Height
 #define WANT_MEAN_AXIS 1//Creates an axis where the origin of the axis is the mean of all X and Y points
 #define MIRROR_Y 1 //Option to reflect points across the X axis (inverting Y value (eg. 603 == -603)) to make it look more like a traditional graph
 //Support for a custom coordinate pair (X,Y) where the origin (0,0) for your generated graph lies
