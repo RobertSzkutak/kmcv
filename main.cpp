@@ -159,18 +159,18 @@ void print_clusters(point *points, int numpoints, int *cluster_centersx, int *cl
         out << "Chance of landing in quadrant 1: " << (double) q1 / numpoints << std::endl;
 	    out << "Number of points in quadrant 2 (lower right): " << q2 << std::endl;
         out << "Chance of landing in quadrant 2: " << (double) q2 / numpoints << std::endl;
-	    out << "Number of points in quadrant 3 (upper left): " << q3 << std::endl;
+	    out << "Number of points in quadrant 3 (upper right): " << q3 << std::endl;
         out << "Chance of landing in quadrant 3: " << (double) q3 / numpoints << std::endl;
-	    out << "Number of points in quadrant 4 (upper right): " << q4 << std::endl;
+	    out << "Number of points in quadrant 4 (upper left): " << q4 << std::endl;
         out << "Chance of landing in quadrant 4: " << (double) q4 / numpoints << std::endl;
     #else
-        out << "Number of points in quadrant 1 (lower left): " << q4 << std::endl;
+        out << "Number of points in quadrant 1 (upper left): " << q4 << std::endl;
         out << "Chance of landing in quadrant 1: " << (double) q4 / numpoints << std::endl;
-	    out << "Number of points in quadrant 2 (lower right): " << q3 << std::endl;
+	    out << "Number of points in quadrant 2 (upper right): " << q3 << std::endl;
         out << "Chance of landing in quadrant 2: " << (double) q3 / numpoints << std::endl;
-	    out << "Number of points in quadrant 3 (upper left): " << q2 << std::endl;
+	    out << "Number of points in quadrant 3 (lower right): " << q2 << std::endl;
         out << "Chance of landing in quadrant 3: " << (double) q2 / numpoints << std::endl;
-	    out << "Number of points in quadrant 4 (upper right): " << q1 << std::endl;
+	    out << "Number of points in quadrant 4 (lower left): " << q1 << std::endl;
         out << "Chance of landing in quadrant 4: " << (double) q1 / numpoints << std::endl;
     #endif
 
