@@ -117,12 +117,12 @@ void html5_visualize_clusters(point *points, int numpoints, int *cluster_centers
                 if(points[i].y > greaty)
                     greaty = points[i].y;
                 if(points[i].y < lowy)
-                    lowx = points[i].y;
+                    lowy = points[i].y;
             }
             totx = (greatx + lowx) / 2;
             toty = (greaty + lowy) / 2;
             std::ostringstream avgx, avgy;
-            avgx << totx / numpoints;
+            avgx << totx;
             #ifdef MIRROR_Y
                 avgy << toty * -1;
             #else

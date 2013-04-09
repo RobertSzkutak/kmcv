@@ -72,10 +72,11 @@ void print_clusters(point *points, int numpoints, int *cluster_centersx, int *cl
             if(points[i].y > greaty)
                 greaty = points[i].y;
             if(points[i].y < lowy)
-                lowx = points[i].y;
+                lowy = points[i].y;
         }
         avgx = (greatx + lowx) / 2;
         avgy = (greaty + lowy) / 2;
+        out << std::endl << "GreatX: " << greatx << "LowX: " << lowx << "GreatY: " << greaty << "LowY: " << lowy;
         out << std::endl << "Split of data: (" << avgx << "," << avgy << ")" << std::endl << std::endl;
     #else
         int avgx = 0, avgy = 0;
