@@ -61,15 +61,33 @@ void print_clusters(point *points, int numpoints, int *cluster_centersx, int *cl
     }
 
     //Print data statistics
-    int avgx = 0, avgy = 0;
-    for(int i = 0; i < numpoints; i++)
-    {
-        avgx += points[i].x;
-        avgy += points[i].y;
-    }
-    avgx /= numpoints;
-    avgy /= numpoints;
-    out << std::endl << "Mean of data: (" << avgx << "," << avgy << ")" << std::endl << std::endl;
+    #ifdef WANT_SPLIT_AXIS//Yeah, this is kind of a hack of something different. Conference driven development is forcing me to be ugly right now.
+        int avgx = 0, avgy = 0, greatx=points[0].x, lowx=points[0].x, greaty=points[0].y, lowy=points[0].y;
+        for(int i = 0; i < numpoints; i++)
+        {
+            if(points[i].x > greatx)
+                greatx = points[i].x;
+            if(points[i].x < lowx)
+                lowx = points[i].x;
+            if(points[i].y > greaty)
+                greaty = points[i].y;
+            if(points[i].y < lowy)
+                lowx = points[i].y;
+        }
+        avgx = (greatx + lowx) / 2;
+        avgy = (greaty + lowy) / 2;
+        out << std::endl << "Split of data: (" << avgx << "," << avgy << ")" << std::endl << std::endl;
+    #else
+        int avgx = 0, avgy = 0;
+        for(int i = 0; i < numpoints; i++)
+        {
+            avgx += points[i].x;
+            avgy += points[i].y;
+        }
+        avgx /= numpoints;
+        avgy /= numpoints;
+        out << std::endl << "Mean of data: (" << avgx << "," << avgy << ")" << std::endl << std::endl;
+    #endif
     
     int ul = 0, uls = 0, ur = 0, urs = 0, ll = 0, lls = 0, lr = 0, lrs = 0;
     for(int i = 0; i < numpoints; i++)

@@ -91,18 +91,43 @@ void html5_visualize_clusters(point *points, int numpoints, int *cluster_centers
 
     //Draw axis
     #ifdef WANT_AXIS_DRAWN
-        int totx = 0, toty = 0;    
-        for(int i = 0; i < numpoints; i++)
-        {
-            totx += points[i].x;
-            toty += points[i].y;
-        }
-        std::ostringstream avgx, avgy;
-        avgx << totx / numpoints;
-        #ifdef MIRROR_Y
-            avgy << toty / numpoints * -1;
-        #else
-            avgy << toty / numpoints;
+        #ifdef WANT_MEAN_AXIS
+            int totx = 0, toty = 0;    
+            for(int i = 0; i < numpoints; i++)
+            {
+                totx += points[i].x;
+                toty += points[i].y;
+            }
+            std::ostringstream avgx, avgy;
+            avgx << totx / numpoints;
+            #ifdef MIRROR_Y
+                avgy << toty / numpoints * -1;
+            #else
+                avgy << toty / numpoints;
+            #endif
+        #endif
+        #ifdef WANT_SPLIT_AXIS
+            int totx = 0, toty = 0, greatx=points[0].x, lowx=points[0].x, greaty=points[0].y, lowy=points[0].y;
+            for(int i = 0; i < numpoints; i++)
+            {
+                if(points[i].x > greatx)
+                    greatx = points[i].x;
+                if(points[i].x < lowx)
+                    lowx = points[i].x;
+                if(points[i].y > greaty)
+                    greaty = points[i].y;
+                if(points[i].y < lowy)
+                    lowx = points[i].y;
+            }
+            totx = (greatx + lowx) / 2;
+            toty = (greaty + lowy) / 2;
+            std::ostringstream avgx, avgy;
+            avgx << totx / numpoints;
+            #ifdef MIRROR_Y
+                avgy << toty * -1;
+            #else
+                avgy << toty;
+            #endif
         #endif
         #ifdef WANT_MEAN_AXIS
             //Draw Y Axis
@@ -118,7 +143,23 @@ void html5_visualize_clusters(point *points, int numpoints, int *cluster_centers
                        context.lineTo(" + convert.str() + "," + avgy.str() + "+offset_y);\
                        context.closePath();\
                        context.stroke();";
-        #else
+        #endif
+        #ifdef WANT_SPLIT_AXIS
+            //Draw Y Axis
+            script += "context.fillStyle = \"rgb(0, 0, 0)\";";
+            script += "context.beginPath();";
+            script += "context.moveTo(" + avgx.str() + "+offset_x,0);\
+                       context.lineTo(" + avgx.str() + "+offset_x," + convert2.str() + ");\
+                       context.closePath();\
+                       context.stroke();";
+            //Draw X axis
+            script += "context.beginPath();";
+            script += "context.moveTo(0," + avgy.str() + "+offset_y);\
+                       context.lineTo(" + convert.str() + "," + avgy.str() + "+offset_y);\
+                       context.closePath();\
+                       context.stroke();";
+        #endif
+        #ifdef WANT_ORIGIN_AXIS
             //Draw Y Axis
             script += "context.fillStyle = \"rgb(0, 0, 0)\";";
             script += "context.beginPath();";

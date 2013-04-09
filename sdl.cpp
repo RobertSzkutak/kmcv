@@ -163,7 +163,32 @@ void draw_points(point *points, int numpoints, int *cluster_centersx, int *clust
             SDL_Rect yaxis = {totx/numpoints+offset_x, 0, 1, WINH};
             SDL_FillRect(screen, &xaxis, BLACK);
             SDL_FillRect(screen, &yaxis, BLACK);
-        #else
+        #endif
+        #ifdef WANT_SPLIT_AXIS
+            int avgx = 0, avgy = 0, greatx=points[0].x, lowx=points[0].x, greaty=points[0].y, lowy=points[0].y;
+            for(int i = 0; i < numpoints; i++)
+            {
+                if(points[i].x > greatx)
+                    greatx = points[i].x;
+                if(points[i].x < lowx)
+                    lowx = points[i].x;
+                if(points[i].y > greaty)
+                    greaty = points[i].y;
+                if(points[i].y < lowy)
+                    lowx = points[i].y;
+            }
+            avgx = (greatx + lowx) / 2;
+            avgy = (greaty + lowy) / 2;
+            #ifdef MIRROR_Y
+                SDL_Rect xaxis = {0, avgy/numpoints*-1+offset_y, WINW, 1};
+            #else
+                SDL_Rect xaxis = {0, avgy/numpoints+offset_y, WINW, 1};
+            #endif
+            SDL_Rect yaxis = {avgx/numpoints+offset_x, 0, 1, WINH};
+            SDL_FillRect(screen, &xaxis, BLACK);
+            SDL_FillRect(screen, &yaxis, BLACK);
+        #endif
+        #ifdef WANT_ORIGIN_AXIS
             SDL_Rect xaxis = {0, 0+offset_y, WINW, 1};
             SDL_Rect yaxis = {0+offset_x, 0, 1, WINH};
             SDL_FillRect(screen, &xaxis, BLACK);

@@ -35,8 +35,6 @@
 //k-means options
 #define CLUSTERS 4 //Number of clusters to arrange points into
 #define POINTS 500 //Number of points to generate if random generation is used
-#define WANT_CENTERS_DRAWN 1 //Whether or not to draw the cluster centers in the rendering of clusters
-#define WANT_AXIS_DRAWN 1 //Whether or not to draw a mean axis in the rendering of clusters
 #define WANT_CLUSTERS_PRINTED 1 //Whether or not to make an output file detailing the clusters, cluster centers, and clusters that each point belongs to
 
 #define USE_SDL 1 //Whether or not to use the SDL visualizer
@@ -45,7 +43,11 @@
 //Visualizer options
 #define WINW 2048 //Window Width
 #define WINH 2048 //Window Height
-#define WANT_MEAN_AXIS 1//Creates an axis where the origin of the axis is the mean of all X and Y points
+#define WANT_CENTERS_DRAWN 1 //Whether or not to draw the cluster centers in the rendering of clusters
+#define WANT_AXIS_DRAWN 1 //Whether or not to draw an axis in the rendering of clusters
+//#define WANT_MEAN_AXIS 1//Creates an axis where the origin of the axis is the mean of all X and Y points
+//#define WANT_ORIGIN_AXIS 1//Creates an axis where the origin is (0,0)
+#define WANT_SPLIT_AXIS 1//Creates an axis where origin is the greatest X value + least X value /2 , greatest Y + least Y / 2
 #define MIRROR_Y 1 //Option to reflect points across the X axis (inverting Y value (eg. 603 == -603)) to make it look more like a traditional graph
 //Support for a custom coordinate pair (X,Y) where the origin (0,0) for your generated graph lies
 #define ORIGIN 1
